@@ -8,6 +8,7 @@ type Profile = {
   balance: number;
   avatar_url: string | null;
   is_admin: boolean;
+  grade: string | null;
 };
 
 type AuthContextType = {

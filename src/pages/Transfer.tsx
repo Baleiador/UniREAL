@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router';
 type Profile = {
   id: string;
   full_name: string;
+  grade: string | null;
 };
 
 export function Transfer() {
@@ -28,7 +29,7 @@ export function Transfer() {
       const searchUsers = async () => {
         const { data, error } = await supabase
           .from('profiles')
-          .select('id, full_name')
+          .select('id, full_name, grade')
           .ilike('full_name', `%${searchQuery}%`)
           .neq('id', profile?.id)
           .limit(5);
@@ -170,7 +171,10 @@ export function Transfer() {
                           <div className="w-10 h-10 rounded-full bg-brand-orange/10 text-brand-orange flex items-center justify-center font-bold">
                             {user.full_name.charAt(0).toUpperCase()}
                           </div>
-                          <span className="font-medium text-black">{user.full_name}</span>
+                          <div className="flex flex-col">
+                            <span className="font-medium text-black">{user.full_name}</span>
+                            {user.grade && <span className="text-xs text-gray-500">{user.grade}</span>}
+                          </div>
                         </button>
                       ))}
                     </div>

@@ -11,6 +11,7 @@ type Profile = {
   id: string;
   full_name: string;
   balance: number;
+  grade: string | null;
 };
 
 export function Admin() {
@@ -40,7 +41,7 @@ export function Admin() {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, full_name, balance')
+        .select('id, full_name, balance, grade')
         .neq('id', profile?.id) // Exclude the admin themselves
         .order('full_name');
 
@@ -167,6 +168,7 @@ export function Admin() {
                 <thead>
                   <tr className="bg-white border-b border-gray-100 text-sm text-gray-500 uppercase tracking-wider">
                     <th className="px-6 py-4 font-medium">Aluno</th>
+                    <th className="px-6 py-4 font-medium">Turma</th>
                     <th className="px-6 py-4 font-medium">Saldo Atual</th>
                     <th className="px-6 py-4 font-medium text-right">Ação</th>
                   </tr>
@@ -181,6 +183,9 @@ export function Admin() {
                           </div>
                           <span className="font-semibold text-black">{student.full_name}</span>
                         </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-gray-600">{student.grade || '-'}</span>
                       </td>
                       <td className="px-6 py-4">
                         <span className="font-bold text-black">{student.balance} UR</span>

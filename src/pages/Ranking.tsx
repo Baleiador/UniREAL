@@ -7,23 +7,44 @@ type Profile = {
   id: string;
   full_name: string;
   balance: number;
+  grade: string | null;
 };
 
 export function Ranking() {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedGrade, setSelectedGrade] = useState<string>('Todos');
+
+  const GRADES = [
+    'Todos',
+    '6º Ano',
+    '7º Ano',
+    '8º Ano',
+    '9º Ano',
+    '1º Ano (Ensino Médio)',
+    '2º Ano (Ensino Médio)',
+    '3º Ano (Ensino Médio)',
+  ];
 
   useEffect(() => {
     fetchRanking();
-  }, []);
+  }, [selectedGrade]);
 
   const fetchRanking = async () => {
+    setLoading(true);
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('profiles')
-        .select('id, full_name, balance')
+        .select('id, full_name, balance, grade')
+        .eq('is_admin', false)
         .order('balance', { ascending: false })
         .limit(50);
+
+      if (selectedGrade !== 'Todos') {
+        query = query.eq('grade', selectedGrade);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       setProfiles(data || []);
@@ -36,12 +57,23 @@ export function Ranking() {
 
   return (
     <div className="space-y-8">
-      <header>
-        <h1 className="text-3xl font-bold text-black mb-2 flex items-center gap-3">
-          <Trophy className="w-8 h-8 text-brand-orange" />
-          Ranking Escolar
-        </h1>
-        <p className="text-gray-500">Veja quem são os alunos com mais Unireais.</p>
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-black mb-2 flex items-center gap-3">
+            <Trophy className="w-8 h-8 text-brand-orange" />
+            Ranking Escolar
+          </h1>
+          <p className="text-gray-500">Veja quem são os alunos com mais Unireais.</p>
+        </div>
+        <div>
+          <select
+            className="px-4 py-2 rounded-xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 outline-none transition-all bg-white font-medium text-gray-700"
+            value={selectedGrade}
+            onChange={(e) => setSelectedGrade(e.target.value)}
+          >
+            {GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+          </select>
+        </div>
       </header>
 
       <Card>
@@ -74,6 +106,9 @@ export function Ranking() {
                         <p className={`font-semibold text-lg ${index === 0 ? 'text-brand-orange' : 'text-black'}`}>
                           {profile.full_name}
                         </p>
+                        {profile.grade && (
+                          <p className="text-sm text-gray-500">{profile.grade}</p>
+                        )}
                       </div>
                     </div>
                     <div className="text-xl font-black text-black">
