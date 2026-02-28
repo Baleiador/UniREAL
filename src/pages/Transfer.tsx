@@ -32,6 +32,7 @@ export function Transfer() {
           .select('id, full_name, grade')
           .ilike('full_name', `%${searchQuery}%`)
           .neq('id', profile?.id)
+          .eq('is_admin', false)
           .limit(5);
 
         if (!error && data) {

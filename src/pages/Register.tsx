@@ -94,14 +94,15 @@ export function Register() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Turma / Série</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">Turma / Cargo</label>
             <select
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 outline-none transition-all bg-white"
               value={grade}
               onChange={(e) => setGrade(e.target.value)}
               required
             >
-              <option value="" disabled>Selecione sua turma</option>
+              <option value="" disabled>Selecione sua turma ou cargo</option>
+              <option value="Coordenação / Professor">Coordenação / Professor</option>
               <option value="6º Ano">6º Ano</option>
               <option value="7º Ano">7º Ano</option>
               <option value="8º Ano">8º Ano</option>

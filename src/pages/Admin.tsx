@@ -42,7 +42,7 @@ export function Admin() {
       const { data, error } = await supabase
         .from('profiles')
         .select('id, full_name, balance, grade')
-        .neq('id', profile?.id) // Exclude the admin themselves
+        .eq('is_admin', false) // Only show students
         .order('full_name');
 
       if (error) throw error;
